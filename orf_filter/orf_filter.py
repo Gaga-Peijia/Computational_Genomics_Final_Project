@@ -74,4 +74,4 @@ def analyze_dna_frames(sequence, threshold):
 input_file = sys.argv[1]
 output_file = sys.argv[2]
 threshold = 0.5
-generate_orf_filter(input_file, output_file, threshold=0.5)
+generate_orf_filter(input_file, output_file, threshold=0.5) 
