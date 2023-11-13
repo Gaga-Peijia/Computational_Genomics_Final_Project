@@ -49,7 +49,7 @@ def codon_to_amino_acid(codon):
 #convert mer to protein
 def kmer_to_protein(kmer_index):
     """
-    Convert a DNA kmer to its corresponding amino acid.
+    Convert a DNA kmer index to its corresponding amino acid index.
     """
     protein_dinx={}
     for kmer,idx in kmer_index.items():
@@ -58,7 +58,16 @@ def kmer_to_protein(kmer_index):
             protein_dinx[protein].append(idx)
         protein_dinx[protein]=idx
     return protein_dinx
-
+def reads_to_protein(reads):
+    """
+    Convert a DNA read to its corresponding amino acid index.
+    """
+    protein_read=''
+    for i in range(len(reads)//3):
+        read=reads[i*3:i*3+3]
+        protein=codon_to_amino_acid(read)
+        protein_read+=protein
+    return protein_read
 def get_kmers_index(seq, k=3):
     """
     Generate all kmers of length k in a DNA sequence.
@@ -99,6 +108,8 @@ def read_six_frame_protein_index(read):
     including the reverse then convert to protein index.
     """
     six_frames=six_frame(read)
-    kmer_index=[get_kmers_index (frame, 3) for frame in six_frames]
-    protein_indexs=[kmer_to_protein(kmer_index[i]) for i in range(len(kmer_index))]
+    # print(six_frames)
+    protein_reads=[reads_to_protein(six_frames[i]) for i in range(len(six_frames))]
+    # print(protein_reads)
+    protein_indexs=[get_kmers_index(protein_reads[i]) for i in range(len(protein_reads))]
     return protein_indexs
