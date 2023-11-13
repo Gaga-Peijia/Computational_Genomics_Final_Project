@@ -95,7 +95,8 @@ def six_frame(read):
 
 def read_six_frame_protein_index(read):
     """
-    Generate the six reading frames of a DNA sequence, including the reverse
+    Generate the six reading frames of a DNA sequence, 
+    including the reverse then convert to protein index.
     """
     six_frames=six_frame(read)
     kmer_index=[get_kmers_index (frame, 3) for frame in six_frames]
