@@ -1,92 +1,77 @@
 import sys
 
-input_seq = sys.argv[1]
-outputFile = sys.argv[2]
+def read_fasta(input_file):
+    with open(input_file, encoding="utf-8") as myFile:
+        input_seq = myFile.readlines()
+    return input_seq
 
-
-first = True
-seq_from_input = ""
-start_codon = "ATG"
-stop_codon = ["TAA", "TAG", "TGA"]
-
-def find_sequences(genome,dist):
-    sequences = []
-    start = 0
+def generate_orf_filter(input_file, output_file, threshold):
+    seq_name = ""
+    current_seq = ""
+    output_text = []
+    input_seq = read_fasta(input_file)
     
-    while start<len(genome):
-        if genome[start:start+3] == start_codon:
-            for stop in range (start, len(genome),3):
-                if genome[stop:stop+3] in stop_codon and (stop+3-start)>dist:
-                    sequences.append(genome[start:stop+3])
-                    break
-        start+=1
-    return sequences
-        
+    # now we extract each sequence 
+    # first we get the name of the sequence
+    #second we deal with the six frame of the corresponding sequence
 
-with open(input_seq, encoding="utf-8") as myFile:
-    input_seq = myFile.readlines()
+    for line in input_seq:
+        if line[0] == ">":
+            seq_name = line.strip()
+        else:
+            current_seq = line.strip()
+            #now we deal with the sequence: 1. we need to get the forward three frames
+            #then we need to get the reverse compliment and get the three frames from that 
+            if analyze_dna_frames(current_seq, threshold)==False:
+                ## if the function return false=> means at least one frame has no stop codon
+                ## we will add this sequence to the output file
+                output_text.append(seq_name)   
+                output_text.append(current_seq)
+    with open(output_file, 'w') as out_fh:
+        for line in output_text:
+            out_fh.write(line+"\n")
+            
+            
+def complement(nucleotide):
+    complements = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
+    return complements.get(nucleotide, '')
 
+def reverse_complement(seq):
+    return ''.join(complement(n) for n in reversed(seq))
 
-for lines in input_seq:
-    if first ==True:
-        first = False
-    else:
-        line = lines.strip()
-        seq_from_input+=line
-#print(seq_from_input)       
-result = find_sequences(seq_from_input,50)
+def truncate_seq(seq,  threshold):
+    if not 0 <= threshold <= 1:
+        raise ValueError("Threshold must be between 0 and 1")
+    truncated_length = int(len(seq) * threshold)
+    return seq[:truncated_length]
 
-#print(result)
-        
-count = 1
-with open(outputFile, 'w') as out_fh:
-    for seq in result:
-        out_fh.write("seq"+str(count)+"\n")
-        out_fh.write(seq+"\n")
-
-import sys
-
-input_seq = sys.argv[1]
-outputFile = sys.argv[2]
-
-
-first = True
-seq_from_input = ""
-start_codon = "ATG"
-stop_codon = ["TAA", "TAG", "TGA"]
-
-def find_sequences(genome,dist):
-    sequences = []
-    start = 0
+def analyze_dna_frames(sequence, threshold):
+    stop_codon = ["TAA", "TAG", "TGA"]
+    stop_count = 0
+    forward_seq = truncate_seq(sequence, threshold)
+    reverse_sequence = truncate_seq(reverse_complement(sequence), threshold)
     
-    while start<len(genome):
-        if genome[start:start+3] == start_codon:
-            for stop in range (start, len(genome),3):
-                if genome[stop:stop+3] in stop_codon and (stop+3-start)>dist:
-                    sequences.append(genome[start:stop+3])
-                    break
-        start+=1
-    return sequences
-        
-
-with open(input_seq, encoding="utf-8") as myFile:
-    input_seq = myFile.readlines()
-
-
-for lines in input_seq:
-    if first ==True:
-        first = False
+    # Analyze forward frames
+    for frame in range(3):
+        for i in range(frame, len(forward_seq), 3):
+            codon = forward_seq[i:i+3]
+            if codon in stop_codon:
+                stop_count+=1
+                break
+    # Analyze reverse frames
+    for frame in range(3):
+        for i in range(frame, len(reverse_sequence), 3):
+            codon = reverse_sequence[i:i+3]
+            if codon in stop_codon:
+                stop_count+=1
+                break
+            
+    if stop_count==6:
+        return True
     else:
-        line = lines.strip()
-        seq_from_input+=line
-#print(seq_from_input)       
-result = find_sequences(seq_from_input,50)
+        return False
 
-#print(result)
-        
-count = 1
-with open(outputFile, 'w') as out_fh:
-    for seq in result:
-        out_fh.write("seq"+str(count)+"\n")
-        out_fh.write(seq+"\n")
-        count+=1
+input_file = sys.argv[1]
+output_file = sys.argv[2]
+threshold = 0.5
+generate_orf_filter(input_file, output_file, threshold=0.5)
