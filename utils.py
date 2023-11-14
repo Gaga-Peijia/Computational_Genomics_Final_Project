@@ -1,3 +1,5 @@
+import random
+
 def random_sample(file,sample_len=150,number_of_samples=10000):
     """
     Randomly sample a FASTA file.
