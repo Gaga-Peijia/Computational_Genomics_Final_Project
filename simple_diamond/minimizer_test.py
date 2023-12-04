@@ -1,6 +1,7 @@
 import hashlib
 
 def find_unique_minimizers_with_min_hash_dict(sequence, k, w):
+    print(sequence, k, w)
     """
     Find unique minimizers in a given sequence based on minimum hash value.
     Store the results in a dictionary where each key is a unique k-mer and the value is a set of positions.
@@ -10,7 +11,6 @@ def find_unique_minimizers_with_min_hash_dict(sequence, k, w):
     :param w: The window size.
     :return: A dictionary with k-mers as keys and sets of positions as values.
     """
-
     if len(sequence) < k or len(sequence) < w or w < k:
         raise ValueError("Invalid sequence, k, or w values.")
 

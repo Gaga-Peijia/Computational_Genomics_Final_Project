@@ -2,7 +2,7 @@ import itertools
 import minimizer_test
 import sort_merge_join
 import smith_waterman
-
+import datetime
 
 
 def double_indexing_iterator(query_database, protein_database, reduced_query_database, reduced_protein_database, shape):
@@ -24,8 +24,10 @@ def double_indexing_iterator(query_database, protein_database, reduced_query_dat
         frame_count = 0
         for individual_frame in reduced_query_database[query]:
             minimizer_sequences = minimizer_test.find_unique_minimizers_with_min_hash_dict(individual_frame, shape_length, 27)
+            first_time = datetime.datetime.now()
             merged_dict = sort_merge_join.sort_merge_join_dicts(minimizer_sequences, protein_list[0], shape)
-            
+            last_time = datetime.datetime.now()
+            print(last_time - first_time)
             for seed, positions in merged_dict.items():
                 for query_seed_pos in positions[0]:
                     for reference_seed_pos in positions[1]:

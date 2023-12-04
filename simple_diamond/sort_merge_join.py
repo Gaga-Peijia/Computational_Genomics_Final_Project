@@ -1,3 +1,4 @@
+import radix_cluster
 def sort_merge_join_dicts(dict1, dict2, shape):
     """
     Perform a sort-merge join between two dictionaries.
@@ -9,6 +10,10 @@ def sort_merge_join_dicts(dict1, dict2, shape):
     """
 
     # Convert the dictionaries to sorted lists of tuples
+    #sorted_list1 = radix_cluster.sort_seeds(dict1.items())
+    #sorted_list2 = radix_cluster.sort_seeds(dict2.items())
+
+    
     sorted_list1 = sorted(dict1.items())
     sorted_list2 = sorted(dict2.items())
 

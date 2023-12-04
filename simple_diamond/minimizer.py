@@ -44,3 +44,10 @@ def find_unique_minimizers_with_min_hash(sequence, k, w, shape, query):
             seen_minimizers.add(min_kmer)
 
     return minimizers
+
+
+sequence = "ACGTGCAATGC"
+k = 3  # k-mer size
+w = 5  # window size
+unique_minimizers = find_unique_minimizers_with_min_hash(sequence, k, w, "101", False)
+print(unique_minimizers)

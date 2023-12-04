@@ -20,7 +20,7 @@ with open(args.protein_database, encoding="utf-8") as myFile:
 query_dictionary, query_dictionary_reduced = read_fasta.read_fasta_for_DNA(query_sequences)
 protein_database_dictionary, protein_database_dictionary_reduced = read_fasta.read_fasta_for_proteins(protein_database_sequences)
 
-#sorted_query_reduced, sorted_protein_database_reduced = double_indexing.double_indexing_iterator(query_dictionary, protein_database_dictionary, query_dictionary_reduced, protein_database_dictionary_reduced, "111101101101")
+sorted_query_reduced, sorted_protein_database_reduced = double_indexing.double_indexing_iterator(query_dictionary, protein_database_dictionary, query_dictionary_reduced, protein_database_dictionary_reduced, "111101101101")
 
 
 
