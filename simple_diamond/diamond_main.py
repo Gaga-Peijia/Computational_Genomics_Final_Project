@@ -28,21 +28,28 @@ with open(args.protein_database, encoding="utf-8") as myFile:
 query_dictionary, query_dictionary_reduced = read_fasta.read_fasta_for_DNA(query_sequences)
 protein_database_dictionary, protein_database_dictionary_reduced = read_fasta.read_fasta_for_proteins(protein_database_sequences)
 
+print(query_dictionary)
+print(protein_database_dictionary)
+
 if args.extension == "full_sw":
-    full_smithwaterman.run_full_smithwaterman()
+    full_smithwaterman.run_full_smithwaterman(query_dictionary, protein_database_dictionary)
 
 """
 elif args.extension == "regional_sw":
     sketching_technique = args.sketching
     match sketching_technique:
         case "uniform": 
-            output_file = double_indexing.double_indexing_naive_iterator()
+            double_indexing.double_indexing_iterator()
         case "minimizer":
-            output_file = double_indexing.double_indexing_naive_iterator()
+            double_indexing.double_indexing_iterator()
         case "minhash":
-            output_file = double_indexing.double_indexing_naive_iterator()
+            double_indexing.double_indexing_iterator()
 
 else:
+    print("Extension Settings are as follows:\n\tfull_sw: Performs Smith Waterman between queried protein and reference database\n\tRegional_sw: Performs Smith Waterman between queried protein and reference database")
+"""
+"""
+elif args.extension == "seed_extend":
     sketching_technique = args.sketching
     match sketching_technique:
         case "uniform": 
@@ -54,7 +61,6 @@ else:
         
     output_file = double_indexing
 """
-
 #sorted_query_reduced, sorted_protein_database_reduced = double_indexing.double_indexing_iterator(query_dictionary, protein_database_dictionary, query_dictionary_reduced, protein_database_dictionary_reduced, "111101101101")
 
 
