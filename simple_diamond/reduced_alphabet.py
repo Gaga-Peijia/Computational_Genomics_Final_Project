@@ -18,10 +18,3 @@ def reduce_sequence(sequence):
     reduced_sequence = ''.join(reduced_alphabet.get(aa, '*') for aa in sequence)
     return reduced_sequence
 
-# Example usage
-"""
-original_sequence = "MSTNPKPQRKCCSCCLGRGECRASVG*KCSTSSLCSKCGCACGTG"
-reduced_sequence = reduce_sequence(original_sequence)
-print("Original:", original_sequence)
-print("Reduced:", reduced_sequence)
-"""
