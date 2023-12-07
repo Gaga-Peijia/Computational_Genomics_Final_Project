@@ -12,7 +12,7 @@ def merge_sort(arr,layer=0):
     right_half = arr[mid:]
 
     # Use ProcessPoolExecutor with a maximum of 16 processes
-    if layer <=1:
+    if layer <=4:
         with ProcessPoolExecutor(max_workers=16) as executor:
             left_sorted, right_sorted = executor.map(merge_sort, [left_half, right_half],[layer+1,layer+1])
     else:
@@ -68,21 +68,28 @@ def merge_sort_single(arr):
             k += 1
 
 def benchmark_sorting(sort_function, arr):
+    arr_copy = arr.copy()
     start_time = time.time()
-    sort_function(arr.copy())
+    sort_function(arr_copy)
     end_time = time.time()
     return end_time - start_time
 if __name__=="__main__":
     # Generating a random list for benchmarking
-    random_list = [random.randint(0, 10000) for _ in range(10000)]
+    # random_list = [random.randint(0, 1000000) for _ in range(1000000)]
     #random dna(ACGT) with length 30
-    # random_list = [random.choice('ACGT') for _ in range(30)]
+    # random_list = [[random.choice('ACGT') for _ in range(30)]]
+    random_list=[]
+    for i in range(10000000):
+        random_str = [random.choice('ACGT') for _ in range(30)]
+        random_str = "".join(random_str)
+        random_list.append(random_str)
+    # print(random_list)
 
 
     # # Benchmarking the multi-threaded merge sort
     time_taken = benchmark_sorting(merge_sort, random_list)
     print(f"Multi-threaded merge sort took {time_taken} seconds.")
     #single thread
-    time_taken = benchmark_sorting(merge_sort_single, random_list)
+    time_taken = benchmark_sorting(sorted, random_list)
     print(f"Single-threaded merge sort took {time_taken} seconds.")
 
