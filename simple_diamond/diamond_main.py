@@ -2,7 +2,7 @@ import sys
 import argparse
 import read_fasta
 import full_smithwaterman
-#import double_indexing
+import double_indexing
 
 
 
@@ -27,24 +27,23 @@ with open(args.protein_database, encoding="utf-8") as myFile:
 
 query_dictionary, query_dictionary_reduced = read_fasta.read_fasta_for_DNA(query_sequences)
 protein_database_dictionary, protein_database_dictionary_reduced = read_fasta.read_fasta_for_proteins(protein_database_sequences)
-
 print(query_dictionary)
-print(protein_database_dictionary)
 
 if args.extension == "full_sw":
     full_smithwaterman.run_full_smithwaterman(query_dictionary, protein_database_dictionary)
 
-"""
+
 elif args.extension == "regional_sw":
     sketching_technique = args.sketching
     match sketching_technique:
         case "uniform": 
-            double_indexing.double_indexing_iterator()
+            double_indexing.double_indexing_iterator(query_dictionary, protein_database_dictionary, query_dictionary_reduced, protein_database_dictionary_reduced, ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique)
         case "minimizer":
-            double_indexing.double_indexing_iterator()
+            double_indexing.double_indexing_iterator(query_dictionary, protein_database_dictionary, query_dictionary_reduced, protein_database_dictionary_reduced, ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique)
         case "minhash":
-            double_indexing.double_indexing_iterator()
+            double_indexing.double_indexing_iterator(query_dictionary, protein_database_dictionary, query_dictionary_reduced, protein_database_dictionary_reduced, ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique)
 
+"""
 else:
     print("Extension Settings are as follows:\n\tfull_sw: Performs Smith Waterman between queried protein and reference database\n\tRegional_sw: Performs Smith Waterman between queried protein and reference database")
 """

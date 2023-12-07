@@ -84,14 +84,3 @@ def SMalignment(seq1, seq2, penalty_matrix):
     align_score = float(align_score)
     
     return aligning_sequence, align_seq1, align_seq2, align_score
-
-# Get the BLOSUM62 matrix
-BLOSUM62 = bl.BLOSUM(62)
-# Example usage
-seq1 = "DFNVILMSTCGAGKEDAG"
-seq2 = "DFEVIISTCGAAKRNKDAG"
-aligning, align_1, align_2, alignment_score = SMalignment(seq1, seq2, BLOSUM62)
-print(align_1)
-print(aligning)
-print(align_2)
-print("Alignment Score:", alignment_score)

@@ -1,4 +1,3 @@
-import radix_cluster
 def sort_merge_join_dicts(dict1, dict2, shape):
     """
     Perform a sort-merge join between two dictionaries.
@@ -16,7 +15,6 @@ def sort_merge_join_dicts(dict1, dict2, shape):
     
     sorted_list1 = sorted(dict1.items())
     sorted_list2 = sorted(dict2.items())
-
     # Initialize pointers for both lists
     i, j = 0, 0
     result = {}
