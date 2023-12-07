@@ -3,6 +3,7 @@ import argparse
 import read_fasta
 import full_smithwaterman
 import double_indexing
+from alignment import *
 
 
 
@@ -27,21 +28,38 @@ with open(args.protein_database, encoding="utf-8") as myFile:
 
 query_dictionary, query_dictionary_reduced = read_fasta.read_fasta_for_DNA(query_sequences)
 protein_database_dictionary, protein_database_dictionary_reduced = read_fasta.read_fasta_for_proteins(protein_database_sequences)
-print(query_dictionary)
+# print(query_dictionary)
 
 if args.extension == "full_sw":
-    full_smithwaterman.run_full_smithwaterman(query_dictionary, protein_database_dictionary)
+    alignments=find_best_alignment(query_dictionary, protein_database_dictionary)
+    with open("alignments.txt", "w") as f:
+        for query_name,query_matches in alignments.items():
+            for match in query_matches:
+                f.write(f"{query_name}\t{match['data_name']}\t{match['score']}\t{match['frame']}\t{match['position']}\n")
+            
 
 
 elif args.extension == "regional_sw":
     sketching_technique = args.sketching
-    match sketching_technique:
-        case "uniform": 
-            double_indexing.double_indexing_iterator(query_dictionary, protein_database_dictionary, query_dictionary_reduced, protein_database_dictionary_reduced, ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique)
-        case "minimizer":
-            double_indexing.double_indexing_iterator(query_dictionary, protein_database_dictionary, query_dictionary_reduced, protein_database_dictionary_reduced, ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique)
-        case "minhash":
-            double_indexing.double_indexing_iterator(query_dictionary, protein_database_dictionary, query_dictionary_reduced, protein_database_dictionary_reduced, ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique)
+    if sketching_technique == "uniform":
+        double_indexing.double_indexing_iterator(query_dictionary, 
+                                                 protein_database_dictionary, 
+                                                 query_dictionary_reduced, 
+                                                 protein_database_dictionary_reduced, 
+                                                 ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique)
+    elif sketching_technique == "minimizer":
+        double_indexing.double_indexing_iterator(query_dictionary, 
+                                                 protein_database_dictionary, 
+                                                 query_dictionary_reduced, 
+                                                 protein_database_dictionary_reduced, 
+                                                 ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique)
+    elif sketching_technique == "minhash":
+        double_indexing.double_indexing_iterator(query_dictionary, 
+                                                 protein_database_dictionary, 
+                                                 query_dictionary_reduced, 
+                                                 protein_database_dictionary_reduced, 
+                                                 ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique)
+
 
 """
 else:
