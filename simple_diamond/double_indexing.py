@@ -1,8 +1,6 @@
 import itertools
 import sketching
-#import minimizer_test
 import sort_merge_join
-#import smith_waterman
 import datetime
 import blosum as bl
 import full_smithwaterman
@@ -19,10 +17,12 @@ def best_match(dict, querydatabase, protein_database,seed_length):
         starting_position_of_reference = 0
         edge = 0
         reading_frame_list = []
+        protein_sequence_length = 0
         for item in dict:
             #item is the name of the query
             for protein_name in dict[item]:
                 protein_seq = protein_database[protein_name]
+                protein_sequence_length = len(protein_seq)
                 for reading_frame in dict[item][protein_name]:
                     #reset the variable every time we traverse each reading frame
                     query_seq = querydatabase[item][reading_frame]
@@ -38,7 +38,7 @@ def best_match(dict, querydatabase, protein_database,seed_length):
                     for index in reading_frame_list:
                         if index>=edge:  # it should be >= since edge can be 0
                             start = max(0, index - query_len)
-                            end = min(query_len, index + seed_length + query_len)
+                            end = min(protein_sequence_length, index + seed_length + query_len)
                             edge = end  #extending the edge
                             sequence_snippet = protein_seq[start:end]
                             aligning_sequence, query_align, protein_align, score = full_smithwaterman.SMalignment(query_seq, sequence_snippet, BLOSUM62)
@@ -96,7 +96,6 @@ def double_indexing_iterator(query_database, protein_database, reduced_query_dat
                                     query_database_seed_hits[query][protein_list_name[protein_list_count]][individual_frame_count].append(positions)          
                 last_time = datetime.datetime.now()
                 time = last_time - first_time
-                print("1 iter complete in " + str(time))
     print(query_database_seed_hits)
     best_match(query_database_seed_hits, query_database, protein_database, len(max(shapes, key=len)))
     

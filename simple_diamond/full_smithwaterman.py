@@ -13,7 +13,6 @@ def SingleBaseCompare(seq1,seq2,i,j, matrix):
 def SMalignment(seq1, seq2, penalty_matrix):
     m = len(seq1)
     n = len(seq2)
-    
     g = -5
     matrix = []
     for i in range(0, m):
