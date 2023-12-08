@@ -1,5 +1,23 @@
 import hashlib
 
+
+def find_uniformers(sequence, gap_value):
+    sketch_dict = {}
+
+    # Iterate through the sequence
+    for i, char in enumerate(sequence):
+        # Use the gap_value for gaps (e.g., '-')
+        sketch_dict[i + 1] = char if char != '-' else gap_value
+
+    # Sort the dictionary by keys
+    sorted_sketch = dict(sorted(sketch_dict.items()))
+
+    return sorted_sketch
+
+
+
+
+
 def find_minimizers(sequence, k, w):
     """
     Find unique minimizers in a given sequence based on minimum hash value.
