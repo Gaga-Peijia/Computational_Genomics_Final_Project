@@ -24,26 +24,27 @@ def find_best_alignment(DNA_query,protein_database):
             for i in range(len(query_protein)):
                 query_read=query_protein[i]
                 alignment = SMalignment(query_read, data_protein,bl.BLOSUM(62))
-                score= int(alignment[3])
-                if score>max_score:
+                align_score= int(alignment[3])
+                blosum_score= int(alignment[4])
+                if blosum_score>max_score:
                     
-                    max_score=score
+                    max_score=blosum_score
                     max_score_name_protein=data_name
                     max_score_alignment=list(alignment)
                     max_score_alignment.append(i)
                     position=data_protein.find(alignment[2].replace('-',''))
                     frame=i
                     query["data_name"]=data_name
-                    query["score"]=score
+                    query["score"]=align_score
                     query["alignment"]=alignment
                     query["frame"]=frame
                     query["position"]=position
                     querys=[query]
-                elif score==max_score:
+                elif blosum_score==max_score:
                     position=data_protein.find(alignment[2].replace('-',''))
                     frame=i
                     query["data_name"]=data_name
-                    query["score"]=score
+                    query["score"]=align_score
                     query["alignment"]=alignment
                     query["frame"]=frame
                     query["position"]=position
