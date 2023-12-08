@@ -28,6 +28,7 @@ def best_match(dict, querydatabase, protein_database,seed_length):
                     query_seq = querydatabase[item][reading_frame]
                     query_len = len(query_seq)
                     best_reading_frame_score = 0
+                    best_reading_frame_align_score = 0
                     best_reading_frame = 0
                     starting_position_of_reference = 0
                     edge = 0
@@ -41,60 +42,16 @@ def best_match(dict, querydatabase, protein_database,seed_length):
                             end = min(protein_sequence_length, index + seed_length + query_len)
                             edge = end  #extending the edge
                             sequence_snippet = protein_seq[start:end]
-                            score, query_align, protein_align = full_smithwaterman.SMalignment(query_seq, sequence_snippet, BLOSUM62)
-                            if score>best_reading_frame_score:
-                                best_reading_frame_score = score
+                            alignment, query_align, protein_align, align_score, blosum_score = full_smithwaterman.SMalignment(query_seq, sequence_snippet, BLOSUM62)
+                            if blosum_score>best_reading_frame_score:
+                                best_reading_frame_score = blosum_score
+                                best_reading_frame_align_score = align_score
                                 starting_position_of_reference = start
                                 if best_reading_frame!=reading_frame:
                                     best_reading_frame = reading_frame
                 #after each iteration
-                if best_reading_frame_score >= 0.5:
-                    file.write(f"{item}\t{protein_name}\t{best_reading_frame_score}\t{starting_position_of_reference}\t{best_reading_frame}\n")    
+                file.write(f"{item}\t{protein_name}\t{best_reading_frame_align_score}\t{starting_position_of_reference}\t{best_reading_frame}\n")    
                     #return aligning_sequence, align_seq1, align_seq2, align_score
-
-def best_match_full_sw(dict, querydatabase, protein_database):
-    with open("alignment_results_full_sw.txt", "w") as file:
-        #initialize the local variable
-        query_seq = ""
-        query_len = 0
-        best_reading_frame_score = 0
-        best_reading_frame = 0
-        starting_position_of_reference = 0
-        edge = 0
-        reading_frame_list = []
-        protein_sequence_length = 0
-        for item in dict:
-            #item is the name of the query
-            for protein_name in dict[item]:
-                protein_seq = protein_database[protein_name]
-                for reading_frame in dict[item][protein_name]:
-                    #reset the variable every time we traverse each reading frame
-                    query_seq = querydatabase[item][reading_frame]
-                    best_reading_frame_score = 0
-                    best_reading_frame = 0
-                    starting_position_of_reference = 0
-                    edge = 0
-                    #reginal smithwarterman
-                    #need to convert set to list and sort it 
-                    reading_frame_list = list(dict[item][protein_name][reading_frame])
-                    reading_frame_list.sort()
-                    for index in reading_frame_list:
-                        if index>=edge:  # it should be >= since edge can be 0
-                            start = max(0, index - query_len)
-                            end = min(protein_sequence_length, index + seed_length + query_len)
-                            edge = end  #extending the edge
-                            sequence_snippet = protein_seq[start:end]
-                            aligning_sequence, query_align, protein_align, score = full_smithwaterman.SMalignment(query_seq, sequence_snippet, BLOSUM62)
-                            if score>best_reading_frame_score:
-                                best_reading_frame_score = score
-                                starting_position_of_reference = start
-                                if best_reading_frame!=reading_frame:
-                                    best_reading_frame = reading_frame
-                #after each iteration
-                #if best_reading_frame_score >= 0.5:
-                file.write(f"{item}\t{protein_name}\t{best_reading_frame_score}\t{starting_position_of_reference}\t{best_reading_frame}\n")    
-                    #return aligning_sequence, align_seq1, align_seq2, align_score
-
 
 
 
