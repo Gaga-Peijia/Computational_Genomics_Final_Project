@@ -13,6 +13,7 @@ def SingleBaseCompare(seq1,seq2,i,j, matrix):
 def SMalignment(seq1, seq2, penalty_matrix):
     m = len(seq1)
     n = len(seq2)
+    
     g = -5
     matrix = []
     for i in range(0, m):
@@ -26,13 +27,7 @@ def SMalignment(seq1, seq2, penalty_matrix):
         matrix[0][sjj] = sjj*g
     for siii in range(1, m):
         for sjjj in range(1, n):
-            try:
-                matrix[siii][sjjj] = max(matrix[siii-1][sjjj] + g, matrix[siii - 1][sjjj - 1] + SingleBaseCompare(seq1,seq2,siii, sjjj,penalty_matrix), matrix[siii][sjjj-1] + g)
-            except:
-                print(siii, sjjj)
-                print(seq1, seq2)
-                # print(matrix)
-                exit()
+            matrix[siii][sjjj] = max(matrix[siii-1][sjjj] + g, matrix[siii - 1][sjjj - 1] + SingleBaseCompare(seq1,seq2,siii, sjjj,penalty_matrix), matrix[siii][sjjj-1] + g)
     sequ1 = [seq1[m-1]]
     sequ2 = [seq2[n-1]]
     while m > 1 and n > 1:
@@ -68,13 +63,9 @@ def SMalignment(seq1, seq2, penalty_matrix):
                 aligning.append('|')
             else:
                 aligning.append(' ')
-            scoring = SingleBaseCompare(sequ1,sequ2,k,k, penalty_matrix)
-            align_score += scoring
             if k-1>=0 and sequ1[k-1]=='-':
-                align_score-=11+gapcount_seq1
                 gapcount_seq1 = 0
             elif k-1>=0 and sequ2[k-1]=='-':
-                align_score-=11+gapcount_seq2
                 gapcount_seq2 = 0
         elif sequ1[k]=='-':
             aligning.append(' ')
@@ -84,9 +75,10 @@ def SMalignment(seq1, seq2, penalty_matrix):
             gapcount_seq2+=1
         
     aligning_sequence = ''.join(aligning)
-    
-
-    align_score = float(align_score)
+    for k in range(0, len(align_seq1)):
+        if align_seq1[k] == align_seq2[k]:
+            align_score += 1
+    align_score = float(align_score)/len(align_seq1)
     
     return aligning_sequence, align_seq1, align_seq2, align_score
 
