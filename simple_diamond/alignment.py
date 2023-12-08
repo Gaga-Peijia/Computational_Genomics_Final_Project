@@ -16,10 +16,8 @@ def find_best_alignment(DNA_query,protein_database):
     for query_name,query_protein in DNA_query.items():
         print(query_name)
         querys=[]
+        max_score = -100000
         for data_name,data_protein in protein_database.items():
-            max_score = -100000
-            max_score_name_protein = ""
-            max_score_alignment = []
             query={}
             for i in range(len(query_protein)):
                 query_read=query_protein[i]
@@ -27,11 +25,7 @@ def find_best_alignment(DNA_query,protein_database):
                 align_score= int(alignment[3])
                 blosum_score= int(alignment[4])
                 if blosum_score>max_score:
-                    
                     max_score=blosum_score
-                    max_score_name_protein=data_name
-                    max_score_alignment=list(alignment)
-                    max_score_alignment.append(i)
                     position=data_protein.find(alignment[2].replace('-',''))
                     frame=i
                     query["data_name"]=data_name
@@ -66,14 +60,3 @@ if __name__=='__main__':
     alignments = find_best_alignment(DNA_query,protein_database)
     print("test")
     print(alignments)
-    # print("best match protein database name:",protein_name)
-    # print("best match query name:",query_name)
-    # print(alignment[1])
-    # print(alignment[0])
-    # print(alignment[2])
-
-    # # print("database alignment:",alignment[0])
-    # # print("query alignment:",alignment[2])
-    # print("score:",alignment[3])
-    # print('frame number:',alignment[4])
-    # print('position:',alignment[5])
