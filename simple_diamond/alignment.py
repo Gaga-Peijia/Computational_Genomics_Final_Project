@@ -51,6 +51,7 @@ def find_best_alignment(DNA_query,protein_database):
 
     return alignments
 #example usage
+
 if __name__=='__main__':
     CURR_DIR = os.path.dirname(os.path.realpath(__file__))
     with open(os.path.join(CURR_DIR,'test_DNA_query.fasta')) as protein_database:

@@ -83,3 +83,12 @@ def SMalignment(seq1, seq2, penalty_matrix):
     align_score = float(align_score)
     
     return aligning_sequence, align_seq1, align_seq2, align_score
+
+if __name__=="__main__":
+    seq1 = "TACGGGCCCGCTAC"
+    seq2 = "TAGCCCTATCGGTCA"
+    aligning, align_1, align_2, alignment_score = SMalignment(seq1, seq2, bl.BLOSUM(62))
+    print(align_1)
+    print(aligning)
+    print(align_2)
+    print("Alignment Score:", alignment_score)

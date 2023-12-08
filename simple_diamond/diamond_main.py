@@ -8,8 +8,6 @@ from alignment import *
 
 
 #read in the fata from protein database and query
-
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--query', type=str, required=True)
 parser.add_argument('--protein_database', type=str, required=True)
