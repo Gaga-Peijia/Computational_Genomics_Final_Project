@@ -90,6 +90,7 @@ if __name__=="__main__":
     time_taken = benchmark_sorting(merge_sort, random_list)
     print(f"Multi-threaded merge sort took {time_taken} seconds.")
     #single thread
-    time_taken = benchmark_sorting(sorted, random_list)
+    time_taken = benchmark_sorting(merge_sort_single, random_list)
     print(f"Single-threaded merge sort took {time_taken} seconds.")
-
+    time_taken = benchmark_sorting(sorted, random_list)
+    print(f"Single-threaded python sort took {time_taken} seconds.")
