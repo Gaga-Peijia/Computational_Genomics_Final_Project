@@ -34,6 +34,10 @@ if args.extension == "full_sw":
             for match in query_matches:
                 f.write(f"{query_name}\t{match['data_name']}\t{match['score']}\t{match['frame']}\t{match['position']}\n")
 
+elif args.extension == "full_sw_smart":
+    sketching_technique = args.sketching
+
+
 elif args.extension == "regional_sw":
     sketching_technique = args.sketching
     if sketching_technique == "uniform":
@@ -41,19 +45,19 @@ elif args.extension == "regional_sw":
                                                  protein_database_dictionary, 
                                                  query_dictionary_reduced, 
                                                  protein_database_dictionary_reduced, 
-                                                 ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique)
+                                                 ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique, "regional")
     elif sketching_technique == "minimizer":
         double_indexing.double_indexing_iterator(query_dictionary, 
                                                  protein_database_dictionary, 
                                                  query_dictionary_reduced, 
                                                  protein_database_dictionary_reduced, 
-                                                 ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique)
+                                                 ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique, "regional")
     elif sketching_technique == "minhash":
         double_indexing.double_indexing_iterator(query_dictionary, 
                                                  protein_database_dictionary, 
                                                  query_dictionary_reduced, 
                                                  protein_database_dictionary_reduced, 
-                                                 ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique)
+                                                 ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique, "regional")
 
 
 """
