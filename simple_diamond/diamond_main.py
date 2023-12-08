@@ -34,7 +34,7 @@ if args.extension == "full_sw":
     with open("alignments.txt", "w") as f:
         for query_name,query_matches in alignments.items():
             for match in query_matches:
-                f.write(f"{query_name}\t{match['data_name']}\t{match['score']}\t{match['frame']}\t{match['position']}\n")
+                f.write(f"{query_name}\t{match['data_name']}\t{match['score']}\t{match['position']}\t{match['frame']}\n")
 
 elif args.extension == "full_sw_smart":
     sketching_technique = args.sketching
