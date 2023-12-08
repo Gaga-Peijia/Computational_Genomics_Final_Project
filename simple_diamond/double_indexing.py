@@ -48,14 +48,15 @@ def best_match(dict, querydatabase, protein_database,seed_length):
                                 if best_reading_frame!=reading_frame:
                                     best_reading_frame = reading_frame
                 #after each iteration
-                file.write(f"{item}\t{protein_name}\t{best_reading_frame_score}\t{starting_position_of_reference}\t{best_reading_frame}\n")    
+                if best_reading_frame_score >= 0.5:
+                    file.write(f"{item}\t{protein_name}\t{best_reading_frame_score}\t{starting_position_of_reference}\t{best_reading_frame}\n")    
                     #return aligning_sequence, align_seq1, align_seq2, align_score
                     
 
 
 
 
-def double_indexing_iterator(query_database, protein_database, reduced_query_database, reduced_protein_database, shapes, sketching_method):
+def double_indexing_iterator(query_database, protein_database, reduced_query_database, reduced_protein_database, shapes, sketching_method, sw_size):
     query_database_seed_hits = {}    
     for query in reduced_query_database:
         query_database_seed_hits[query] = {}
@@ -67,8 +68,13 @@ def double_indexing_iterator(query_database, protein_database, reduced_query_dat
         first_time = datetime.datetime.now()
 
         for protein in reduced_protein_database:
-            protein_list.append(sketching.find_minimizers(reduced_protein_database[protein], shape_length, 30))
-            protein_list_name.append(protein)
+            if sketching_method == "uniform":
+                protein_list.append(sketching.find_uniformers(reduced_protein_database[protein], 24))
+            if sketching_method == "minhash":
+                protein_list.append(sketching.find_minhash(reduced_protein_database[protein], shape_length, 50))
+            if sketching_method == "minimizer":
+                protein_list.append(sketching.find_minimizers(reduced_protein_database[protein], shape_length, 30))
+            protein_list_name.append(protein)            
         last_time = datetime.datetime.now()
         time = last_time - first_time
         print("Seed structure complete in " + str(time))
@@ -76,7 +82,12 @@ def double_indexing_iterator(query_database, protein_database, reduced_query_dat
         for query in reduced_query_database:
             for individual_frame_count in range(len(reduced_query_database[query])):
                 first_time = datetime.datetime.now()
-                query_dictionary = sketching.find_minimizers(reduced_query_database[query][individual_frame_count], shape_length, 30)
+                if sketching_method == "uniform":
+                    query_dictionary = sketching.find_uniformers(reduced_query_database[query][individual_frame_count], 24)
+                if sketching_method == "minhash":
+                    query_dictionary = sketching.find_minhash(reduced_query_database[query][individual_frame_count], shape_length, 20)
+                if sketching_method == "minimizer":
+                    query_dictionary = sketching.find_minimizers(reduced_query_database[query][individual_frame_count], shape_length, 30)
                 for protein_list_count in range(len(protein_list)):                    
                     for query_key in query_dictionary:
                         if query_key in protein_list[protein_list_count]:
@@ -97,4 +108,5 @@ def double_indexing_iterator(query_database, protein_database, reduced_query_dat
                 last_time = datetime.datetime.now()
                 time = last_time - first_time
     print(query_database_seed_hits)
-    best_match(query_database_seed_hits, query_database, protein_database, len(max(shapes, key=len)))
+    if sw_size == "regional":
+        best_match(query_database_seed_hits, query_database, protein_database, len(max(shapes, key=len)))

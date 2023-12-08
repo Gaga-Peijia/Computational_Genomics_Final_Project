@@ -1,5 +1,59 @@
 import hashlib
 
+
+def find_uniformers(sequence, gap):
+    """
+    Create a sorted uniform sketch dictionary for a given sequence and gap value.
+
+    :param sequence sequence (str): The input sequence of protein.
+    :param gap_value (str): The value to represent gaps in the sketch.
+
+    :return: A dictionary representing the sorted uniform sketch of the sequence.
+    """
+    
+    sketch_dict = {}
+    for i in range(0, len(sequence), gap):
+        seed = sequence[i:i + gap]
+
+        if seed not in sketch_dict:
+            sketch_dict[seed] = {i}
+        else:
+            sketch_dict[seed].add(i)
+    return sketch_dict  
+
+def find_minhash(dna_sequence, seed_length, number_of_hashes):
+    """
+    Perform minhash sketching on the 5 smallest hash value sequences of size n in a given DNA sequence.
+
+    Parameters:
+    - dna_sequence (str): The input DNA sequence to be sketched.
+    - n (int): The size of the sequences for minhashing.
+
+    Returns:
+    - dict: A dictionary with keys as seeds and values as another dictionary of seed starting positions and hash values.
+    """
+
+    num_hashes = number_of_hashes
+    sketch_dict = {}
+
+    for i in range(len(dna_sequence) - seed_length + 1):
+        seed = dna_sequence[i:i + seed_length]
+
+        # Calculate hash values
+        hash_values = [int(hashlib.sha256(seed.encode('utf-8') + str(hash_num).encode('utf-8')).hexdigest(), 16)
+                       for hash_num in range(num_hashes)]
+
+        # Find the 5 smallest hash values
+        smallest_hashes = sorted(enumerate(hash_values), key=lambda x: x[1])[:5]
+        for idx, hash_value in smallest_hashes:
+            if seed not in sketch_dict:
+                sketch_dict[seed] = {i}
+            else:
+                sketch_dict[seed].add(i)
+
+    return sketch_dict
+
+
 def find_minimizers(sequence, k, w):
     """
     Find unique minimizers in a given sequence based on minimum hash value.
