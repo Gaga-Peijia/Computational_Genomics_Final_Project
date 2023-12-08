@@ -11,83 +11,79 @@ def SingleBaseCompare(seq1,seq2,i,j, matrix):
     return matrix.get(seq1[i], {}).get(seq2[j], None)
     
 def SMalignment(seq1, seq2, penalty_matrix):
-    m = len(seq1)
-    n = len(seq2)
+    gap_cost=5
     
-    g = -5
-    matrix = []
-    for i in range(0, m):
-        tmp = []
-        for j in range(0, n):
-            tmp.append(0)
-        matrix.append(tmp)
-    for sii in range(0, m):
-        matrix[sii][0] = sii*g
-    for sjj in range(0, n):
-        matrix[0][sjj] = sjj*g
-    for siii in range(1, m):
-        for sjjj in range(1, n):
-            try:
-                matrix[siii][sjjj] = max(matrix[siii-1][sjjj] + g, matrix[siii - 1][sjjj - 1] 
-                                         + SingleBaseCompare(seq1,seq2,siii, sjjj,penalty_matrix), matrix[siii][sjjj-1] + g)
-            except:
-                print(siii, sjjj)
-                print(seq1, seq2)
-                # print(matrix)
-                exit()
-    sequ1 = [seq1[m-1]]
-    sequ2 = [seq2[n-1]]
-    while m > 1 and n > 1:
-        if max(matrix[m-1][n-2], matrix[m-2][n-2], matrix[m-2][n-1]) == matrix[m-2][n-2]:
-            m -= 1
-            n -= 1
-            sequ1.append(seq1[m-1])
-            sequ2.append(seq2[n-1])
-        elif max(matrix[m-1][n-2], matrix[m-2][n-2], matrix[m-2][n-1]) == matrix[m-1][n-2]:
-            n -= 1
-            sequ1.append('-')
-            sequ2.append(seq2[n-1])
-        else:
-            m -= 1
-            sequ1.append(seq1[m-1])
-            sequ2.append('-')
-    sequ1.reverse()
-    sequ2.reverse()
-    align_seq1 = ''.join(sequ1)
-    align_seq2 = ''.join(sequ2)
-    align_score = 0.
+    # Initialize the scoring matrix
+    m, n = len(seq1), len(seq2)
+    score_matrix = np.zeros((m + 1, n + 1), dtype=int)
+    
+    # Track the maximum score
+    max_score = 0
+    max_pos = (0, 0)
+
+    # Fill in the scoring matrix
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            match = score_matrix[i-1, j-1] + SingleBaseCompare(seq1,seq2,i-1,j-1, penalty_matrix)
+            delete = score_matrix[i-1, j] - gap_cost
+            insert = score_matrix[i, j-1] - gap_cost
+            score = max(0, match, delete, insert)
+            score_matrix[i, j] = score
+            
+            if score > max_score:
+                max_score = score
+                max_pos = (i, j)
+
+    # Traceback to get the aligned sequences
+    align1, align2 = "", ""
+    aligning = ""
+    i, j = max_pos
+    while score_matrix[i, j] > 0:
+        score = score_matrix[i, j]
+        diag = score_matrix[i-1, j-1]
+        up = score_matrix[i, j-1]
+        left = score_matrix[i-1, j]
+        
+        if score == diag + SingleBaseCompare(seq1,seq2,i-1,j-1, penalty_matrix):
+            if seq1[i-1]==seq2[j-1]:
+                aligning+="|"
+            else:
+                aligning+=" "
+                
+            align1 += seq1[i-1]
+            align2 += seq2[j-1]
+            i -= 1
+            j -= 1
+        elif score == left - gap_cost:
+            align1 += seq1[i-1]
+            align2 += '-'
+            aligning+=" "
+            i -= 1
+        elif score == up - gap_cost:
+            align1 += '-'
+            align2 += seq2[j-1]
+            aligning+=" "
+            j -= 1
+    align_score = 0
+    blosum_score = 0
     gapcount_seq1 = 0
     gapcount_seq2 = 0
-    '''
-    for k in range(0, len(sequ1)):
-        scoring = SingleBaseCompare(sequ1,sequ2,k,k, penalty_matrix)
-        align_score += scoring
-    '''
-    aligning = []
-    for k in range(0, len(sequ1)):
-        if sequ1[k]!='-' and sequ2[k]!='-':
-            if sequ1[k]== sequ2[k]:
-                aligning.append('|')
-            else:
-                aligning.append(' ')
-            if k-1>=0 and sequ1[k-1]=='-':
+    for k in range(0, len(align1)):
+        if align1[k]!='-' and align2[k]!='-':
+            if align1[k]== align2[k]:
+                align_score += 1
+            scoring = SingleBaseCompare(align1,align2,k,k, penalty_matrix)
+            blosum_score += scoring
+            if k-1>=0 and align1[k-1]=='-':
+                blosum_score-=11+gapcount_seq1
                 gapcount_seq1 = 0
-            elif k-1>=0 and sequ2[k-1]=='-':
+            elif k-1>=0 and align2[k-1]=='-':
+                blosum_score-=11+gapcount_seq2
                 gapcount_seq2 = 0
-        elif sequ1[k]=='-':
-            aligning.append(' ')
-            gapcount_seq1+=1
-        elif sequ2[k]=='-':
-            aligning.append(' ')
-            gapcount_seq2+=1
-        
-    aligning_sequence = ''.join(aligning)
-    for k in range(0, len(align_seq1)):
-        if align_seq1[k] == align_seq2[k]:
-            align_score += 1
-    align_score = float(align_score)/len(align_seq1)
+    align_score = float(align_score)/len(align1)
     
-    return aligning_sequence, align_seq1, align_seq2, align_score
+    return aligning, align1, align2, align_score,blosum_score
+
 
 if __name__=="__main__":
     seq1 = "PPPSRGSRWRN*KLSSIRNLPK*NMSCMALVCWGSARIASTLR*FAVARK"
