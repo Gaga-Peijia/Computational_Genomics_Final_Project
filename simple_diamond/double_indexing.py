@@ -55,7 +55,7 @@ def best_match(dict, querydatabase, protein_database,seed_length):
 
 
 
-def double_indexing_iterator(query_database, protein_database, reduced_query_database, reduced_protein_database, shapes, sketching_method, sw_size):
+def double_indexing_iterator(query_database, protein_database, reduced_query_database, reduced_protein_database, shapes, sketching_method, sw_size, save_path):
     query_database_seed_hits = {}    
     for query in reduced_query_database:
         query_database_seed_hits[query] = {}
