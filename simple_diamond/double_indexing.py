@@ -48,7 +48,8 @@ def best_match(dict, querydatabase, protein_database,seed_length):
                                 if best_reading_frame!=reading_frame:
                                     best_reading_frame = reading_frame
                 #after each iteration
-                file.write(f"{item}\t{protein_name}\t{best_reading_frame_score}\t{starting_position_of_reference}\t{best_reading_frame}\n")    
+                if best_reading_frame_score > 0:
+                    file.write(f"{item}\t{protein_name}\t{best_reading_frame_score}\t{starting_position_of_reference}\t{best_reading_frame}\n")    
                     #return aligning_sequence, align_seq1, align_seq2, align_score
                     
 
