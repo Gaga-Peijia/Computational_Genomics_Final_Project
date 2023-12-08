@@ -26,7 +26,13 @@ def SMalignment(seq1, seq2, penalty_matrix):
         matrix[0][sjj] = sjj*g
     for siii in range(1, m):
         for sjjj in range(1, n):
-            matrix[siii][sjjj] = max(matrix[siii-1][sjjj] + g, matrix[siii - 1][sjjj - 1] + SingleBaseCompare(seq1,seq2,siii, sjjj,penalty_matrix), matrix[siii][sjjj-1] + g)
+            try:
+                matrix[siii][sjjj] = max(matrix[siii-1][sjjj] + g, matrix[siii - 1][sjjj - 1] + SingleBaseCompare(seq1,seq2,siii, sjjj,penalty_matrix), matrix[siii][sjjj-1] + g)
+            except:
+                print(siii, sjjj)
+                print(seq1, seq2)
+                # print(matrix)
+                exit()
     sequ1 = [seq1[m-1]]
     sequ2 = [seq2[n-1]]
     while m > 1 and n > 1:
@@ -85,8 +91,8 @@ def SMalignment(seq1, seq2, penalty_matrix):
     return aligning_sequence, align_seq1, align_seq2, align_score
 
 if __name__=="__main__":
-    seq1 = "TACGGGCCCGCTAC"
-    seq2 = "TAGCCCTATCGGTCA"
+    seq1 = "PPPSRGSRWRN*KLSSIRNLPK*NMSCMALVCWGSARIASTLR*FAVARK"
+    seq2 = "MKKVVTVCPYCASGCKINLVVDNGKIVRAEAAQGKTNQGTLCLKGYYGWDFINDTQILTPRLKTPMIRRQRGGKLEPVSWDEALNYVAERLSAIKEKYGPDAIQTTGSSRGTGNETNYVMQKFARAVIGTNNVDCCARVUHGPSVAGLHQSVGNGAMSNAINEIDNTDLVFVFGYNPADSHPIVANHVINAKRNGAKIIVCDPRKIETARIADMHIALKNGSNIALLNAMGHVIIEENLYDKAFVASRTEGFEEYRKIVEGYTPESVEDITGVSASEIRQAARMYAQAKSAAILWGMGVTQFYQGVETVRSLTSLAMLTGNLGKPHAGVNPVRGQNNVQGACDMGALPDTYPGYQYVKDPANREKFAKAWGVESLPAHTGYRISELPHRAAHGEVRAAYIMGEDPLQTDAELSAVRKAFEDLELVIVQDIFMTKTASAADVILPSTSWGEHEGVFTAADRGFQRFFKAVEPKWDLKTDWQIISEIATRMGYPMHYNNTQEIWDELRHLCPDFYGATYEKMGELGFIQWPCRDTSDADQGTSYLFKEKFDTPNGLAQFFTCDWVAPIDKLTDEYPMVLSTVREVGHYSCRSMTGNCAALAALADEPGYAQINTEDAKRLGIEDEALVWVHSRKGKIITRAQVSDRPNKGAIYMTYQWWIGACNELVTENLSPITKTPEYKYCAVRVEPIADQRAAEQYVIDEYNKLKTRLREAALA"
     aligning, align_1, align_2, alignment_score = SMalignment(seq1, seq2, bl.BLOSUM(62))
     print(align_1)
     print(aligning)
