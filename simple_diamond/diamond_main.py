@@ -3,7 +3,7 @@ import argparse
 import read_fasta
 import full_smithwaterman
 import double_indexing
-import datetime
+import time
 from alignment import *
 
 
@@ -17,6 +17,8 @@ parser.add_argument('--sketching', type=str, required=False)
 parser.add_argument('--save_path',  type=str, required=True)
 args = parser.parse_args()
 
+
+time_start = time.time()
 with open(args.query, encoding="utf-8") as myFile:
     query_sequences  = myFile.readlines()
     
@@ -58,7 +60,8 @@ elif args.extension == "regional_sw":
                                                  query_dictionary_reduced, 
                                                  protein_database_dictionary_reduced, 
                                                  ["111101011101111", "111011001100101111", "1111001001010001001111","111100101000010010010111"], sketching_technique, "regional")
-
+total_time = time.time() - time_start
+print("Total time is " + str(total_time))
 
 """
 else:
