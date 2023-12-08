@@ -23,7 +23,6 @@ def find_best_alignment(DNA_query,protein_database):
                 alignment = SMalignment(query_read, data_protein,bl.BLOSUM(62))
                 align_score= int(alignment[3])
                 blosum_score= int(alignment[4])
-
                 if blosum_score>max_score:
                     max_score=blosum_score
                     position=data_protein.find(alignment[2].replace('-',''))
