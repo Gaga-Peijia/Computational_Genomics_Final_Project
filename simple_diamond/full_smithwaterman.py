@@ -27,7 +27,8 @@ def SMalignment(seq1, seq2, penalty_matrix):
     for siii in range(1, m):
         for sjjj in range(1, n):
             try:
-                matrix[siii][sjjj] = max(matrix[siii-1][sjjj] + g, matrix[siii - 1][sjjj - 1] + SingleBaseCompare(seq1,seq2,siii, sjjj,penalty_matrix), matrix[siii][sjjj-1] + g)
+                matrix[siii][sjjj] = max(matrix[siii-1][sjjj] + g, matrix[siii - 1][sjjj - 1] 
+                                         + SingleBaseCompare(seq1,seq2,siii, sjjj,penalty_matrix), matrix[siii][sjjj-1] + g)
             except:
                 print(siii, sjjj)
                 print(seq1, seq2)

@@ -14,6 +14,7 @@ def find_best_alignment(DNA_query,protein_database):
     
     alignments={}
     for query_name,query_protein in DNA_query.items():
+        print(query_name)
         querys=[]
         for data_name,data_protein in protein_database.items():
             max_score = -100000
