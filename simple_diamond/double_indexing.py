@@ -67,8 +67,17 @@ def double_indexing_iterator(query_database, protein_database, reduced_query_dat
         first_time = datetime.datetime.now()
 
         for protein in reduced_protein_database:
-            protein_list.append(sketching.find_minimizers(reduced_protein_database[protein], shape_length, 30))
+            if sketching_method == "uniform":
+                protein_list.append(sketching.find_uniformers(reduced_protein_database[protein], 30))
+            if sketching_method == "minhash":
+                protein_list.append(sketching.find_minhash(reduced_protein_database[protein], 5))
+            if sketching_method == "minimizer":
+                protein_list.append(sketching.find_minimizers(reduced_protein_database[protein], shape_length, 30))
             protein_list_name.append(protein)
+            
+        print(protein_list)
+            
+        """
         last_time = datetime.datetime.now()
         time = last_time - first_time
         print("Seed structure complete in " + str(time))
@@ -97,4 +106,5 @@ def double_indexing_iterator(query_database, protein_database, reduced_query_dat
                 last_time = datetime.datetime.now()
                 time = last_time - first_time
     print(query_database_seed_hits)
-    best_match(query_database_seed_hits, query_database, protein_database, len(max(shapes, key=len)))
+    """
+    #best_match(query_database_seed_hits, query_database, protein_database, len(max(shapes, key=len)))

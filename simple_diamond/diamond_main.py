@@ -3,6 +3,7 @@ import argparse
 import read_fasta
 import full_smithwaterman
 import double_indexing
+import datetime
 from alignment import *
 
 
@@ -16,7 +17,6 @@ parser.add_argument('--sketching', type=str, required=False)
 parser.add_argument('--save_path',  type=str, required=True)
 args = parser.parse_args()
 
-
 with open(args.query, encoding="utf-8") as myFile:
     query_sequences  = myFile.readlines()
     
@@ -26,7 +26,6 @@ with open(args.protein_database, encoding="utf-8") as myFile:
 
 query_dictionary, query_dictionary_reduced = read_fasta.read_fasta_for_DNA(query_sequences)
 protein_database_dictionary, protein_database_dictionary_reduced = read_fasta.read_fasta_for_proteins(protein_database_sequences)
-# print(query_dictionary)
 
 if args.extension == "full_sw":
     alignments=find_best_alignment(query_dictionary, protein_database_dictionary)
@@ -34,8 +33,6 @@ if args.extension == "full_sw":
         for query_name,query_matches in alignments.items():
             for match in query_matches:
                 f.write(f"{query_name}\t{match['data_name']}\t{match['score']}\t{match['frame']}\t{match['position']}\n")
-            
-
 
 elif args.extension == "regional_sw":
     sketching_technique = args.sketching

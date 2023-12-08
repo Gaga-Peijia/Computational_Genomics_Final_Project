@@ -1,20 +1,25 @@
 import hashlib
 
 
-def find_uniformers(sequence, gap_value):
+def find_uniformers(sequence, gap):
+    """
+    Create a sorted uniform sketch dictionary for a given sequence and gap value.
+
+    :param sequence sequence (str): The input sequence of protein.
+    :param gap_value (str): The value to represent gaps in the sketch.
+
+    :return: A dictionary representing the sorted uniform sketch of the sequence.
+    """
+    
     sketch_dict = {}
+    for i in range(0, len(sequence), gap):
+        seed = sequence[i:i + gap]
 
-    # Iterate through the sequence
-    for i, char in enumerate(sequence):
-        # Use the gap_value for gaps (e.g., '-')
-        sketch_dict[i + 1] = char if char != '-' else gap_value
-
-    # Sort the dictionary by keys
-    sorted_sketch = dict(sorted(sketch_dict.items()))
-
-    return sorted_sketch
-
-
+        if seed not in sketch_dict:
+            sketch_dict[seed] = {i}
+        else:
+            sketch_dict[seed].add(i)
+    return sketch_dict
 
 
 
