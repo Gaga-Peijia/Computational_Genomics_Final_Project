@@ -68,10 +68,9 @@ def double_indexing_iterator(query_database, protein_database, reduced_query_dat
 
         for protein in reduced_protein_database:
             if sketching_method == "uniform":
-                protein_list.append(sketching.find_uniformers(reduced_protein_database[protein], 30))
+                protein_list.append(sketching.find_uniformers(reduced_protein_database[protein], 24))
             if sketching_method == "minhash":
-                pass
-                #protein_list.append(sketching.find_minhash(reduced_protein_database[protein], 5))
+                protein_list.append(sketching.find_minhash(reduced_protein_database[protein], shape_length, 50))
             if sketching_method == "minimizer":
                 protein_list.append(sketching.find_minimizers(reduced_protein_database[protein], shape_length, 30))
             protein_list_name.append(protein)            
@@ -83,9 +82,9 @@ def double_indexing_iterator(query_database, protein_database, reduced_query_dat
             for individual_frame_count in range(len(reduced_query_database[query])):
                 first_time = datetime.datetime.now()
                 if sketching_method == "uniform":
-                    query_dictionary = sketching.find_minimizers(reduced_query_database[query][individual_frame_count], shape_length, 30)
+                    query_dictionary = sketching.find_uniformers(reduced_query_database[query][individual_frame_count], 24)
                 if sketching_method == "minhash":
-                    pass
+                    query_dictionary = sketching.find_minhash(reduced_query_database[query][individual_frame_count], shape_length, 20)
                 if sketching_method == "minimizer":
                     query_dictionary = sketching.find_minimizers(reduced_query_database[query][individual_frame_count], shape_length, 30)
                 for protein_list_count in range(len(protein_list)):                    
