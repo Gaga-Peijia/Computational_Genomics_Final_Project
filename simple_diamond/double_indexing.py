@@ -71,7 +71,7 @@ def double_indexing_iterator(query_database, protein_database, reduced_query_dat
             if sketching_method == "uniform":
                 protein_list.append(sketching.find_uniformers(reduced_protein_database[protein], 24))
             if sketching_method == "minhash":
-                protein_list.append(sketching.find_minhash(reduced_protein_database[protein], shape_length, 50))
+                protein_list.append(sketching.find_minhash(reduced_protein_database[protein], shape_length, 5))
             if sketching_method == "minimizer":
                 protein_list.append(sketching.find_minimizers(reduced_protein_database[protein], shape_length, 30))
             protein_list_name.append(protein)            
@@ -85,7 +85,7 @@ def double_indexing_iterator(query_database, protein_database, reduced_query_dat
                 if sketching_method == "uniform":
                     query_dictionary = sketching.find_uniformers(reduced_query_database[query][individual_frame_count], 24)
                 if sketching_method == "minhash":
-                    query_dictionary = sketching.find_minhash(reduced_query_database[query][individual_frame_count], shape_length, 20)
+                    query_dictionary = sketching.find_minhash(reduced_query_database[query][individual_frame_count], shape_length, 5)
                 if sketching_method == "minimizer":
                     query_dictionary = sketching.find_minimizers(reduced_query_database[query][individual_frame_count], shape_length, 30)
                 for protein_list_count in range(len(protein_list)):                    
@@ -107,6 +107,5 @@ def double_indexing_iterator(query_database, protein_database, reduced_query_dat
                                     query_database_seed_hits[query][protein_list_name[protein_list_count]][individual_frame_count].append(positions)          
                 last_time = datetime.datetime.now()
                 time = last_time - first_time
-    print(query_database_seed_hits)
     if sw_size == "regional":
         best_match(query_database_seed_hits, query_database, protein_database, len(max(shapes, key=len)))
