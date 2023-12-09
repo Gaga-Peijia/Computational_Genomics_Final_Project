@@ -14,9 +14,13 @@ parser.add_argument('--query', type=str, required=True)
 parser.add_argument('--protein_database', type=str, required=True)
 parser.add_argument('--extension', type=str, required=True)
 parser.add_argument('--sketching', type=str, required=False)
-parser.add_argument('--save_path',  type=str, required=True)
+parser.add_argument('--save_path',  type=str, required=False)
 args = parser.parse_args()
 
+if args.save_path is None:
+    save_path = "alignments.txt"
+else:
+    save_path = args.save_path
 
 time_start = time.time()
 with open(args.query, encoding="utf-8") as myFile:
@@ -31,7 +35,7 @@ protein_database_dictionary, protein_database_dictionary_reduced = read_fasta.re
 
 if args.extension == "full_sw":
     alignments=find_best_alignment(query_dictionary, protein_database_dictionary)
-    with open("alignments.txt", "w") as f:
+    with open(save_path, "w") as f:
         for query_name,query_matches in alignments.items():
             for match in query_matches:
                 f.write(f"{query_name}\t{match['data_name']}\t{match['score']}\t{match['position']}\t{match['frame']}\n")
